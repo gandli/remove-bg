@@ -34,12 +34,21 @@ export default function ImageUploadComparison() {
             >
                 <input  {...getInputProps()} />
                 {imageUrl ? (
-                    <ImgComparisonSlider hover={true} className='focus:outline-none' >
-                        <img slot="first" src="https://img-comparison-slider.sneas.io/demo/images/before.webp" />
-                        <img slot="second" src="https://img-comparison-slider.sneas.io/demo/images/after.webp" />
-                        {/* <Image src="https://img-comparison-slider.sneas.io/demo/images/before.webp" slot="before" alt="before" fill className="w-full h-full object-cover" />
-                        <Image src="https://img-comparison-slider.sneas.io/demo/images/after.webp" slot="after" alt="after" fill className="w-full h-full object-cover" /> */}
+                    <ImgComparisonSlider hover={true} className="focus:outline-none w-[1280px] h-[550px]">
+                        <img
+                            slot="first"
+                            src="/images/before.webp"
+                            alt="First image preview"
+                            className="w-full h-full object-contain"
+                        />
+                        <img
+                            slot="second"
+                            src="/images/after.webp"
+                            alt="First image preview"
+                            className="w-full h-full object-contain"
+                        />
                     </ImgComparisonSlider>
+
                 ) : (
                     // If no image is selected, show the drag & drop text
                     <p className="text-gray-600">Drag & drop an image here, or click to select one</p>
