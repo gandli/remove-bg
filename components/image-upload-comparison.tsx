@@ -21,43 +21,39 @@ export function ImageUploadComparison() {
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: { 'image/*': [] } })
 
     return (
-        <div className="flex flex-col items-center p-6">
-            <h1 className="text-2xl font-semibold mb-4">Select and Preview Image</h1>
-            <div
-                {...getRootProps()}
-                className={cn(
-                    'w-[1280px] h-[550px] border-2 border-dashed border-gray-400 flex justify-center items-center cursor-pointer transition-all duration-200',
-                    isDragActive ? 'bg-gray-200' : 'bg-white'
-                )}
-            >
-                <input  {...getInputProps()} />
-                {imageUrl ? (
-
-                    <ImgComparisonSlider
-                        hover={true}
-                        className="focus:outline-none w-full h-full max-w-[1280px] max-h-[550px] relative"
-                    >
-                        <Image
-                            slot="first"
-                            src={imageUrl}
-                            alt="原始图片"
-                            className='max-w-[1280px] max-h-[550px] mx-auto'
-                            width={1280}
-                            height={550}
-                        />
-                        <Image
-                            slot="second"
-                            src={imageUrl}
-                            alt="比较图片"
-                            className='max-w-[1280px] max-h-[550px] mx-auto'
-                            width={1280}
-                            height={550}
-                        />
-                    </ImgComparisonSlider>
-                ) : (
-                    <p className="text-gray-600">Drag & drop an image here, or click to select one</p>
-                )}
-            </div>
+        <div
+            {...getRootProps()}
+            className={cn(
+                'w-[1280px] h-[550px] border-2 border-dashed border-gray-400 flex justify-center items-center cursor-pointer transition-all duration-200',
+                isDragActive ? 'bg-gray-200' : 'bg-white'
+            )}
+        >
+            <input  {...getInputProps()} />
+            {imageUrl ? (
+                <ImgComparisonSlider
+                    hover={true}
+                    className="focus:outline-none"
+                >
+                    <Image
+                        slot="first"
+                        src={imageUrl}
+                        alt="原始图片"
+                        className='max-w-[1280px] max-h-[550px] mx-auto object-contain'
+                        width={1280}
+                        height={550}
+                    />
+                    <Image
+                        slot="second"
+                        src={imageUrl}
+                        alt="比较图片"
+                        className='max-w-[1280px] max-h-[550px] mx-auto object-contain'
+                        width={1280}
+                        height={550}
+                    />
+                </ImgComparisonSlider>
+            ) : (
+                <p className="text-gray-600">Drag & drop an image here, or click to select one</p>
+            )}
         </div>
     )
 }
