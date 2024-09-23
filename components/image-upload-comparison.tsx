@@ -35,17 +35,14 @@ export default function ImageUploadComparison() {
                 <input  {...getInputProps()} />
                 {imageUrl ? (
                     <ImgComparisonSlider hover={true} className="focus:outline-none w-[1280px] h-[550px]">
-                        <img
-                            slot="first"
-                            src={imageUrl}
-                            className="mx-auto"
-                        />
-                        <img
-                            slot="second"
-                            src={imageUrl}
-                            className="mx-auto"
-                        />
+                        <div slot="first" className="w-full h-full">
+                            <img src={imageUrl}  />
+                        </div>
+                        <div slot="second" className="w-full h-full">
+                            <img src={imageUrl} />
+                        </div>
                     </ImgComparisonSlider>
+
 
                 ) : (
                     // If no image is selected, show the drag & drop text
