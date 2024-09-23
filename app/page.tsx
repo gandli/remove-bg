@@ -1,40 +1,17 @@
-"use client";
-
-import Image from "next/image";
-import { ImgComparisonSlider } from "@img-comparison-slider/react";
+import { ImageUploadComparison } from "@/components/image-upload-comparison";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex flex-col justify-center items-center px-4 py-8 sm:px-6 lg:px-8">
       <main className="w-full max-w-4xl">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          img-comparison-slider
+          抠图工具
         </h1>
-        <ImgComparisonSlider
-          className="w-full h-auto focus:outline-none"
-          hover={true}
-        >
-          <Image
-            slot="first"
-            alt="清晰的紫色花朵"
-            width={1280}
-            height={550}
-            src="/images/before.webp"
-            priority
-            className="w-full h-auto object-cover"
-          />
-          <Image
-            slot="second"
-            alt="模糊的紫色花朵"
-            width={1280}
-            height={550}
-            src="/images/after.webp"
-            className="w-full h-auto object-cover"
-          />
-        </ImgComparisonSlider>
+
+        <ImageUploadComparison originalImage="/images/after.webp" />
 
         <p className="mt-4 text-sm text-gray-600 text-center">
-          Swipe left and right to compare sharp and blurry images
+          上传图片后，左右滑动以比较原始图片和上传的图片
         </p>
       </main>
     </div>
