@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 import { ImgComparisonSlider } from "@img-comparison-slider/react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils"; // 从 utils.ts 导入 cn 函数
+import { cn } from "@/lib/utils";
 
 interface ImageUploadComparisonProps {
     originalImage: string;
@@ -26,10 +26,9 @@ export function ImageUploadComparison({
             const file = acceptedFiles[0];
             const reader = new FileReader();
             reader.onload = (event) => {
-                // 使用 FileReader 读取文件内容并在浏览器中处理
                 setUploadedImage(event.target?.result as string);
             };
-            reader.readAsDataURL(file); // 将图片文件转换为 Data URL 格式
+            reader.readAsDataURL(file);
         },
     });
 

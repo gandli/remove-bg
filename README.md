@@ -1,6 +1,6 @@
 # Remove-BG 图片背景清除项目
 
-这是一个基于 [Remove.bg](https://www.remove.bg/) API 的图片背景自动移除项目，用户可以上传图片并通过 API 自动移除背景，生成透明背景的图像。
+参考[remove-bg](https://github.com/ducan-ne/remove-bg),一个基于 [Remove.bg](https://www.remove.bg/) API 的图片背景自动移除项目，用户可以上传图片并通过 API 自动移除背景，生成透明背景的图像。
 
 ## 功能
 
