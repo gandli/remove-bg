@@ -19,7 +19,7 @@ export default function Home() {
             alt="清晰的紫色花朵"
             width={1280}
             height={550}
-            src="/images/purple-flowers.3308ebc4.webp"
+            src="/images/before.webp"
             priority
             className="w-full h-auto object-cover"
           />
@@ -28,7 +28,7 @@ export default function Home() {
             alt="模糊的紫色花朵"
             width={1280}
             height={550}
-            src="/images/purple-flowers-blurred.aa6014e2.webp"
+            src="/images/after.webp"
             className="w-full h-auto object-cover"
           />
         </ImgComparisonSlider>
