@@ -1,80 +1,50 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useDropzone } from "react-dropzone";
-import Image from "next/image";
-import { ImgComparisonSlider } from "@img-comparison-slider/react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { useState, useCallback } from 'react'
+import { useDropzone } from 'react-dropzone'
+import Image from 'next/image'
+import { cn } from '@/lib/utils'
+import { ImgComparisonSlider } from '@img-comparison-slider/react'
 
-interface ImageUploadComparisonProps {
-    originalImage: string;
-    width?: string;  // 可选的宽度，Tailwind class 类
-    height?: string; // 可选的高度，Tailwind class 类
-}
+export default function ImageUploadComparison() {
+    const [imageUrl, setImageUrl] = useState<string | null>(null)
 
-export function ImageUploadComparison({
-    originalImage,
-    width = "w-full",  // 默认宽度为 100%
-    height = "h-96",  // 默认高度为 h-96（等于 24rem）
-}: ImageUploadComparisonProps) {
-    const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+    // Handle the drop event to capture the file and create a blob URL
+    const onDrop = useCallback((acceptedFiles: File[]) => {
+        const file = acceptedFiles[0] // Only handle the first file for this example
+        if (!file) return
+        const blobUrl = URL.createObjectURL(file) // Create blob URL for preview
+        setImageUrl(blobUrl)
+    }, [])
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        accept: { "image/*": [] },
-        onDrop: (acceptedFiles) => {
-            const file = acceptedFiles[0];
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setUploadedImage(event.target?.result as string);
-            };
-            reader.readAsDataURL(file);
-        },
-    });
-
-    const resetUpload = () => setUploadedImage(null);
-
-    if (uploadedImage) {
-        return (
-            <div className="space-y-4">
-                <div className={cn("relative mx-auto", width, height)}>
-                    <ImgComparisonSlider className="w-full h-full focus:outline-none" hover={true}>
-                        <Image
-                            slot="first"
-                            alt="原始图片"
-                            fill
-                            src={originalImage}
-                            className="w-full h-full object-cover"
-                        />
-                        <Image
-                            slot="second"
-                            alt="上传的图片"
-                            fill
-                            src={uploadedImage}
-                            className="w-full h-full object-cover"
-                        />
-                    </ImgComparisonSlider>
-                </div>
-                <Button onClick={resetUpload}>重新上传</Button>
-            </div>
-        );
-    }
+    // Configure the dropzone
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept: { 'image/*': [] } })
 
     return (
-        <div
-            {...getRootProps()}
-            className={cn(
-                "relative mx-auto border-2 border-dashed border-gray-300 rounded-lg text-center cursor-pointer transition-colors hover:border-gray-400 flex justify-center items-center",
-                width,
-                height
-            )}
-        >
-            <input {...getInputProps()} />
-            {isDragActive ? (
-                <p className="text-lg text-gray-600">拖放图片到这里 ...</p>
-            ) : (
-                <p className="text-lg text-gray-600">拖放图片到这里，或点击选择图片</p>
-            )}
+        <div className="flex flex-col items-center p-6">
+            <h1 className="text-2xl font-semibold mb-4">Select and Preview Image</h1>
+
+            {/* Combined Dropzone and Image Preview Area */}
+            <div
+                {...getRootProps()}
+                className={cn(
+                    'w-[1280px] h-[550px] border-2 border-dashed border-gray-400 flex justify-center items-center cursor-pointer transition-all duration-200',
+                    isDragActive ? 'bg-gray-200' : 'bg-white'
+                )}
+            >
+                <input  {...getInputProps()} />
+                {imageUrl ? (
+                    <ImgComparisonSlider hover={true} className='focus:outline-none' >
+                        <img slot="first" src="https://img-comparison-slider.sneas.io/demo/images/before.webp" />
+                        <img slot="second" src="https://img-comparison-slider.sneas.io/demo/images/after.webp" />
+                        {/* <Image src="https://img-comparison-slider.sneas.io/demo/images/before.webp" slot="before" alt="before" fill className="w-full h-full object-cover" />
+                        <Image src="https://img-comparison-slider.sneas.io/demo/images/after.webp" slot="after" alt="after" fill className="w-full h-full object-cover" /> */}
+                    </ImgComparisonSlider>
+                ) : (
+                    // If no image is selected, show the drag & drop text
+                    <p className="text-gray-600">Drag & drop an image here, or click to select one</p>
+                )}
+            </div>
         </div>
-    );
+    )
 }
