@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { ImgComparisonSlider } from '@img-comparison-slider/react'
 
-export default function ImageUploadComparison() {
+export function ImageUploadComparison() {
     const [imageUrl, setImageUrl] = useState<string | null>(null)
 
     // Handle the drop event to capture the file and create a blob URL
@@ -23,8 +23,6 @@ export default function ImageUploadComparison() {
     return (
         <div className="flex flex-col items-center p-6">
             <h1 className="text-2xl font-semibold mb-4">Select and Preview Image</h1>
-
-            {/* Combined Dropzone and Image Preview Area */}
             <div
                 {...getRootProps()}
                 className={cn(
@@ -34,18 +32,15 @@ export default function ImageUploadComparison() {
             >
                 <input  {...getInputProps()} />
                 {imageUrl ? (
-                    <ImgComparisonSlider hover={true} className="focus:outline-none w-[1280px] h-[550px]">
-                        <div slot="first" className="w-full h-full">
-                            <img src={imageUrl}  />
-                        </div>
-                        <div slot="second" className="w-full h-full">
-                            <img src={imageUrl} />
-                        </div>
+
+                    <ImgComparisonSlider
+                        hover={true}
+                        className="focus:outline-none w-full h-full max-w-[1280px] max-h-[550px] relative"
+                    >
+                        <img slot="first" src={imageUrl} className='max-w-[1280px] max-h-[550px]  mx-auto' />
+                        <img slot="second" src={imageUrl} className='max-w-[1280px] max-h-[550px]  mx-auto' />
                     </ImgComparisonSlider>
-
-
                 ) : (
-                    // If no image is selected, show the drag & drop text
                     <p className="text-gray-600">Drag & drop an image here, or click to select one</p>
                 )}
             </div>
