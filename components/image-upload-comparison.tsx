@@ -35,7 +35,7 @@ export default function ImageUploadComparison() {
                 <input  {...getInputProps()} />
                 {imageUrl ? (
                     <ImgComparisonSlider hover={true} className="focus:outline-none w-[1280px] h-[550px]">
-                        <img
+                        {/* <img
                             slot="first"
                             src="/images/before.webp"
                             alt="First image preview"
@@ -46,6 +46,22 @@ export default function ImageUploadComparison() {
                             src="/images/after.webp"
                             alt="First image preview"
                             className="w-full h-full object-contain"
+                        /> */}
+                        <Image
+                            slot="first"
+                            src="/images/before.webp"
+                            alt="First image preview"
+                            width={1280}
+                            height={550}
+                            className="object-contain"
+                        />
+                        <Image
+                            slot="second"
+                            src="/images/after.webp"
+                            alt="First image preview"
+                            width={1280}
+                            height={550}
+                            className="object-contain"
                         />
                     </ImgComparisonSlider>
 
