@@ -37,8 +37,22 @@ export function ImageUploadComparison() {
                         hover={true}
                         className="focus:outline-none w-full h-full max-w-[1280px] max-h-[550px] relative"
                     >
-                        <img slot="first" src={imageUrl} className='max-w-[1280px] max-h-[550px]  mx-auto' />
-                        <img slot="second" src={imageUrl} className='max-w-[1280px] max-h-[550px]  mx-auto' />
+                        <Image
+                            slot="first"
+                            src={imageUrl}
+                            alt="原始图片"
+                            className='max-w-[1280px] max-h-[550px] mx-auto'
+                            width={1280}
+                            height={550}
+                        />
+                        <Image
+                            slot="second"
+                            src={imageUrl}
+                            alt="比较图片"
+                            className='max-w-[1280px] max-h-[550px] mx-auto'
+                            width={1280}
+                            height={550}
+                        />
                     </ImgComparisonSlider>
                 ) : (
                     <p className="text-gray-600">Drag & drop an image here, or click to select one</p>
