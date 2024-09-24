@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { removeBg } from "@/lib/ai"; // 导入 removeBg 函数
-import ImageUploadComparison from "@/components/ImageUploadComparison";
+import {ImageUploadComparison} from "@/components/ImageUploadComparison";
 
 export default function Home() {
   const [processedImage, setProcessedImage] = useState<string | null>(null);

@@ -11,7 +11,7 @@ interface ImageUploadComparisonProps {
     processedImageUrl?: string | null;  // 处理后的图片URL（外部传入）
 }
 
-export default function ImageUploadComparison({
+export function ImageUploadComparison({
     onImageUpload,
     processedImageUrl = null,  // 默认为空
 }: ImageUploadComparisonProps) {
