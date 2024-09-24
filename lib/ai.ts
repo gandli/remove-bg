@@ -20,9 +20,10 @@ class PipelineSingleton {
     static processorInstance: any = null;
 
     // 获取模型实例
-    static async getModelInstance(progress_callback = null) {
+    static async getModelInstance(progress_callback: Function | undefined = undefined) {
         if (!this.modelInstance) {
             toast.info("正在加载模型...");
+            // 将 progress_callback 传递为 undefined 代替 null
             this.modelInstance = await AutoModel.from_pretrained(this.model, { progress_callback });
             toast.success("模型加载完成");
         }
@@ -37,6 +38,7 @@ class PipelineSingleton {
         return this.processorInstance;
     }
 }
+
 
 // removeBg 函数，用于图片背景移除
 export async function removeBg(imageUrl: string) {

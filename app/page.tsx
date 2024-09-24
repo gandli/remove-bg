@@ -20,9 +20,17 @@ export default function Home() {
   };
 
   return (
-    <div>
-      <h1>背景移除示例</h1>
-      <ImageUploadComparison onImageUpload={handleImageUpload} processedImageUrl={processedImage} />
+    <div className="flex flex-col items-center p-6">
+      <h1 className="text-2xl font-semibold mb-4">
+        背景移除工具
+      </h1>
+      <p className="text-gray-600 mb-8">
+        上传图片，移除背景并进行对比
+      </p>
+      <ImageUploadComparison
+        onImageUpload={handleImageUpload}
+        processedImageUrl={processedImage}
+      />
     </div>
   );
 }
