@@ -32,11 +32,11 @@ export default function Homepage() {
   }, [isLoadingModel, error]); // 依赖于 isLoadingModel 和 error
 
   return (
-    <div className='flex flex-col items-center justify-center h-screen'>
-      <Toaster /> {/* Toaster 组件 */}
-      <h1 className='text-4xl font-bold'>Image Processing</h1>
-      <p className='text-lg'>Upload an image to process it.</p>
-      <FileDropzone onDropFile={handleDropFile} processedImageUrl={processedImageUrl} />
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+      <Toaster />
+      <h1 className="text-3xl sm:text-4xl font-semibold mb-4">Image Processing</h1>
+      <p className="text-base sm:text-lg text-gray-600 mb-6">Upload an image to process it.</p>
+      <FileDropzone onDropFile={handleDropFile} processedImageUrl={processedImageUrl || undefined} />
     </div>
   );
 }

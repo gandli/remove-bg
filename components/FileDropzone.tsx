@@ -42,9 +42,9 @@ export function FileDropzone({ onDropFile, processedImageUrl }: FileDropzoneProp
         <div
             {...getRootProps()}
             className={cn(
-                'w-full h-auto border-2 border-dashed flex justify-center items-center cursor-pointer transition-all duration-200',
+                'focus:outline-none w-[640px] h-[275px] border-2 border-dashed flex justify-center items-center cursor-pointer transition-all duration-200',
                 isDragActive ? 'bg-gray-200 border-gray-500' : 'bg-white border-gray-400',
-                'sm:w-[640px] sm:h-[275px]' // Restrict size
+                'sm:w-[640px] sm:h-[275px]'
             )}
         >
             <input {...getInputProps()} />
