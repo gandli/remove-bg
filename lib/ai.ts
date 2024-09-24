@@ -1,108 +1,87 @@
-import { AutoModel, AutoProcessor, env, RawImage } from "@huggingface/transformers";
-import { toast } from "sonner";
-import { getGPUTier } from 'detect-gpu';
+import { AutoModel, AutoProcessor, env, RawImage } from "@xenova/transformers";
+import { toast } from "sonner"
 
-// 设置 Hugging Face 环境配置
-env.allowLocalModels = false;
-env.backends.onnx.wasm.proxy = true;
+// 仅在浏览器环境中执行
+if (typeof window !== 'undefined') {
+    // 确保禁用本地模型
+    env.allowLocalModels = false;
 
-async function loadModelAndProcessor() {
-    const gpuTier = await getGPUTier();
-    const modelSettings: Parameters<typeof AutoModel.from_pretrained>[1] = {
-        config: { model_type: "custom" },
-    };
-
-    // 判断是否使用 WebGPU 和 FP32 精度
-    if (gpuTier?.fps && !gpuTier?.isMobile) {
-        modelSettings.device = "webgpu";
-        modelSettings.dtype = "fp32";
+    // 启用 WASM 后端防止 UI 冻结
+    if (env.backends?.onnx?.wasm) {
+        env.backends.onnx.wasm.proxy = true;
+    } else {
+        console.warn("WASM 后端不可用");
     }
-
-    // 使用 Promise.all 并行加载模型和处理器
-    const [model, processor] = await Promise.all([
-        AutoModel.from_pretrained("briaai/RMBG-1.4", modelSettings),
-        AutoProcessor.from_pretrained("briaai/RMBG-1.4", {
-            config: {
-                do_normalize: true,
-                do_pad: false,
-                do_rescale: true,
-                do_resize: true,
-                image_mean: [0.5, 0.5, 0.5],
-                feature_extractor_type: "ImageFeatureExtractor",
-                image_std: [1, 1, 1],
-                resample: 2,
-                rescale_factor: 0.00392156862745098, // 1/255
-                size: { width: 1024, height: 1024 },
-            },
-        })
-    ]);
-
-    return { model, processor };
 }
 
-const { model: loadedModel, processor: loadedProcessor } = await loadModelAndProcessor();
+class PipelineSingleton {
+    static model = 'briaai/RMBG-1.4'; // 模型名称
+    static modelInstance: any = null;
+    static processorInstance: any = null;
 
-export async function removeBg(url: string) {
-    const image = await RawImage.fromURL(url);
-
-    let loadTimeout: NodeJS.Timeout | undefined;
-    if (!loadedModel || !loadedProcessor) {
-        loadTimeout = setTimeout(() => {
-            toast.info("正在加载模型，这可能需要一点时间...");
-        }, 3000);
+    // 获取模型实例
+    static async getModelInstance(progress_callback = null) {
+        if (!this.modelInstance) {
+            toast.info("正在加载模型...");
+            this.modelInstance = await AutoModel.from_pretrained(this.model, { progress_callback });
+            toast.success("模型加载完成");
+        }
+        return this.modelInstance;
     }
 
-    try {
-        const processor = loadedProcessor;
-        const model = loadedModel;
+    // 获取处理器实例
+    static async getProcessorInstance() {
+        if (!this.processorInstance) {
+            this.processorInstance = await AutoProcessor.from_pretrained(this.model);
+        }
+        return this.processorInstance;
+    }
+}
 
-        // 处理图像
+// removeBg 函数，用于图片背景移除
+export async function removeBg(imageUrl: string) {
+    try {
+        // 仅在浏览器环境中执行
+        if (typeof window === 'undefined') {
+            throw new Error("仅能在客户端中调用此函数");
+        }
+
+        // 加载远程图片
+        const image = await RawImage.fromURL(imageUrl);
+
+        // 获取模型与处理器实例
+        const model = await PipelineSingleton.getModelInstance();
+        const processor = await PipelineSingleton.getProcessorInstance();
+
+        // 处理图片
         const { pixel_values } = await processor(image);
 
-        // 预测图像的透明度蒙版
+        // 进行推理
         const { output } = await model({ input: pixel_values });
 
-        // 清理定时器
-        if (loadTimeout) clearTimeout(loadTimeout);
-
-        // 将蒙版的大小调整回原始图像大小
+        // 返回处理后的结果
         const mask = await RawImage.fromTensor(output[0].mul(255).to("uint8")).resize(
             image.width,
-            image.height,
+            image.height
         );
 
-        // 创建 Canvas 进行图像处理
+        // 在 Canvas 上绘制原图并更新 alpha 通道
         const canvas = document.createElement("canvas");
         canvas.width = image.width;
         canvas.height = image.height;
         const ctx = canvas.getContext("2d")!;
-
-        // 绘制原始图像到 Canvas
         ctx.drawImage(image.toCanvas(), 0, 0);
 
-        // 获取图像数据并更新 Alpha 通道
+        // 获取像素数据并更新 alpha 通道
         const pixelData = ctx.getImageData(0, 0, image.width, image.height);
-        const maskData = mask.data;
-
-        // 优化：减少不必要的多次属性访问，减少循环内部的计算
-        const data = pixelData.data;
-        for (let i = 0; i < maskData.length; ++i) {
-            data[4 * i + 3] = maskData[i];  // 更新 Alpha 值
+        for (let i = 0; i < mask.data.length; ++i) {
+            pixelData.data[4 * i + 3] = mask.data[i];
         }
-
-        // 更新画布的图像数据
         ctx.putImageData(pixelData, 0, 0);
 
-        // 返回 Base64 格式的图像数据
-        return canvas.toDataURL();
+        return canvas.toDataURL(); // 返回处理后的图片数据
     } catch (error) {
-        if (loadTimeout) clearTimeout(loadTimeout);
-        console.error("移除背景时出错:", error);
-        toast.error("处理图像时出现问题");
+        console.error("Error during background removal:", error);
         throw error;
     }
 }
-
-export type ServerFunctions = {
-    removeBg: typeof removeBg;
-};

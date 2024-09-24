@@ -6,7 +6,15 @@ import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { ImgComparisonSlider } from '@img-comparison-slider/react'
 
-export function ImageUploadComparison() {
+interface ImageUploadComparisonProps {
+    onImageUpload: (file: File) => void;  // 上传图片后回调函数
+    processedImageUrl?: string | null;  // 处理后的图片URL（外部传入）
+}
+
+export default function ImageUploadComparison({
+    onImageUpload,
+    processedImageUrl = null,  // 默认为空
+}: ImageUploadComparisonProps) {
     const [imageUrl, setImageUrl] = useState<string | null>(null)
 
     // Handle the drop event to capture the file and create a blob URL
@@ -16,7 +24,8 @@ export function ImageUploadComparison() {
 
         const blobUrl = URL.createObjectURL(file) // Create blob URL for preview
         setImageUrl(blobUrl)
-    }, [])
+        onImageUpload(file)  // 上传图片时调用外部传入的回调函数处理图片
+    }, [onImageUpload])
 
     // Cleanup the blob URL to avoid memory leaks
     useEffect(() => {
@@ -42,7 +51,7 @@ export function ImageUploadComparison() {
             )}
         >
             <input {...getInputProps()} />
-            {imageUrl ? (
+            {imageUrl && processedImageUrl ? (
                 <ImgComparisonSlider hover={true} className="focus:outline-none">
                     <Image
                         slot="first"
@@ -54,8 +63,8 @@ export function ImageUploadComparison() {
                     />
                     <Image
                         slot="second"
-                        src={imageUrl}
-                        alt="比较图片"
+                        src={processedImageUrl}
+                        alt="处理后的图片"
                         className="max-w-[1280px] max-h-[550px] object-contain"
                         width={1280}
                         height={550}
