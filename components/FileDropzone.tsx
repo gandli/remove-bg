@@ -42,20 +42,21 @@ export function FileDropzone({ onDropFile, processedImageUrl }: FileDropzoneProp
         <div
             {...getRootProps()}
             className={cn(
-                'focus:outline-none w-[640px] h-[275px] border-2 border-dashed flex justify-center items-center cursor-pointer transition-all duration-200',
+                'focus:outline-none border-2 border-dashed flex justify-center items-center cursor-pointer transition-all duration-200',
                 isDragActive ? 'bg-gray-200 border-gray-500' : 'bg-white border-gray-400',
-                'sm:w-[640px] sm:h-[275px]'
+                'px-4 h-[275px]'
             )}
         >
             <input {...getInputProps()} />
-            {originalImageUrl ? ( // Display the image if originalImageUrl is present
+            {originalImageUrl ? (
                 <ImageSlider
-                    originalImageUrl={originalImageUrl}  // Pass the original image to ImageSlider
-                    processedImageUrl={processedImageUrl || originalImageUrl} // Pass the processed image or fallback to the original
+                    originalImageUrl={originalImageUrl}
+                    processedImageUrl={processedImageUrl || originalImageUrl}
                 />
             ) : (
-                <p className="text-gray-600">Drag and drop an image here or click to select a file</p>
+                <p className="text-gray-600 text-center">Drag and drop an image here or click to select a file</p>
             )}
         </div>
     );
+
 }

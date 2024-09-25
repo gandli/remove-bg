@@ -12,12 +12,12 @@ interface ImageSliderProps {
 
 export function ImageSlider({ originalImageUrl, processedImageUrl }: ImageSliderProps) {
     return (
-        <ImgComparisonSlider hover={true} className="focus:outline-none">
+        <ImgComparisonSlider hover={true} className="focus:outline-none w-full h-full">
             <Image
                 slot="first"
                 src={originalImageUrl}
                 alt="Original Image"
-                className="max-w-[640px] max-h-[275px] object-contain"
+                className="object-cover h-[275px]"
                 width={1280}
                 height={550}
             />
@@ -25,7 +25,7 @@ export function ImageSlider({ originalImageUrl, processedImageUrl }: ImageSlider
                 slot="second"
                 src={processedImageUrl}
                 alt="Processed Image"
-                className="max-w-[640px] max-h-[275px] object-contain"
+                className="object-cover h-[275px]"
                 width={1280}
                 height={550}
             />
