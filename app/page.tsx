@@ -14,29 +14,40 @@ export default function Homepage() {
     const processed = await processImage(fileBase64); // 处理图像
     if (processed) {
       setProcessedImageUrl(processed); // 设置处理后的图像 URL
-      toast.success('Image processed successfully!'); // 成功消息
+      toast.success('图像处理成功！'); // 成功消息
     } else {
-      toast.error('Image processing failed!'); // 失败消息
+      toast.error('图像处理失败！'); // 失败消息
     }
   };
 
   // 使用 useEffect 监听 isLoadingModel 和 error
   useEffect(() => {
     if (isLoadingModel) {
-      toast('Loading model...'); // 模型加载提示
+      toast('模型加载中...'); // 模型加载提示
     }
 
     if (error) {
-      toast.error(`Error loading model: ${error.message}`); // 错误消息提示
+      toast.error(`模型加载错误: ${error.message}`); // 错误消息提示
     }
   }, [isLoadingModel, error]); // 依赖于 isLoadingModel 和 error
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+    <div className="flex flex-col items-center justify-center h-screen bg-gray-100 px-4 sm:px-6 overflow-hidden">
       <Toaster />
-      <h1 className="text-3xl sm:text-4xl font-semibold mb-4">Image Processing</h1>
-      <p className="text-base sm:text-lg text-gray-600 mb-6">Upload an image to process it.</p>
-      <FileDropzone onDropFile={handleDropFile} processedImageUrl={processedImageUrl || undefined} />
+      <div className="w-full max-w-md text-center flex flex-col items-center">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-3 sm:mb-4">
+          Image Processing
+        </h1>
+        <p className="text-xs sm:text-sm md:text-base text-gray-600 mb-4 sm:mb-6">
+          Upload an image to process it.
+        </p>
+        <FileDropzone
+          onDropFile={handleDropFile}
+          processedImageUrl={processedImageUrl || undefined}
+        />
+      </div>
     </div>
+
   );
+
 }
