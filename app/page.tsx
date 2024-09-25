@@ -32,7 +32,7 @@ export default function Homepage() {
   }, [isLoadingModel, error]); // 依赖于 isLoadingModel 和 error
 
   return (
-    <div className="flex flex-col items-center h-screen bg-gray-100 px-4 sm:px-6 overflow-hidden">
+    <div className="flex flex-col items-center h-screen bg-gray-100 p-4 sm:p-6 overflow-hidden">
       <Toaster />
       <div className="w-full max-w-md text-center flex flex-col items-center">
         <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-3 sm:mb-4">
