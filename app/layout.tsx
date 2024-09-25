@@ -14,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "img-comparison-slider",
-  description: "Image comparison slider. Compare images before and after.",
+  title: "Image Processing",
+  description: "Upload an image to process it.",
 };
 
 export default function RootLayout({

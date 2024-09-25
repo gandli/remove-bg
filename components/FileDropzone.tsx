@@ -44,7 +44,7 @@ export function FileDropzone({ onDropFile, processedImageUrl }: FileDropzoneProp
             className={cn(
                 'focus:outline-none border-2 border-dashed flex justify-center items-center cursor-pointer transition-all duration-200',
                 isDragActive ? 'bg-gray-200 border-gray-500' : 'bg-white border-gray-400',
-                'px-4 h-[275px]'
+                'h-[275px]'
             )}
         >
             <input {...getInputProps()} />
