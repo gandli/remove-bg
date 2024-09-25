@@ -3,7 +3,7 @@
 import { AutoModel, AutoProcessor, PreTrainedModel, Processor, RawImage, env } from '@huggingface/transformers';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export function useImageProcessor() {
+export function RemoveBackground() {
     const [isLoadingModel, setIsLoadingModel] = useState(true);
     const [error, setError] = useState<Error | null>(null);
     const modelRef = useRef<PreTrainedModel | null>(null);
@@ -15,8 +15,9 @@ export function useImageProcessor() {
                 const model_id = "briaai/RMBG-1.4";
 
                 // 强制使用 WASM (WebAssembly) 作为设备
-                env.backends.onnx.wasm.proxy = false;
-
+                if (env?.backends?.onnx?.wasm) {
+                    env.backends.onnx.wasm.proxy = false;
+                }
                 // 加载模型和处理器，指定为 "wasm" 设备
                 modelRef.current = await AutoModel.from_pretrained(model_id, { device: "wasm" });
                 processorRef.current = await AutoProcessor.from_pretrained(model_id);

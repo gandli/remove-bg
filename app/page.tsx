@@ -1,12 +1,12 @@
 "use client";
 
-import { useImageProcessor } from '@/lib/useImageProcessing';
+import { RemoveBackground } from '@/lib/removeBackground';
 import { useState, useEffect } from 'react';
 import { Toaster, toast } from 'sonner'; // 导入 Toaster 和 toast
 import { FileDropzone } from '@/components/FileDropzone'; // 导入 FileDropzone 组件
 
 export default function Homepage() {
-  const { isLoadingModel, error, processImage } = useImageProcessor();
+  const { isLoadingModel, error, processImage } = RemoveBackground();
   const [processedImageUrl, setProcessedImageUrl] = useState<string | null>(null);
 
   // 处理图像上传后的处理逻辑
