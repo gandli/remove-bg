@@ -2,6 +2,7 @@
 
 import { AutoModel, AutoProcessor, PreTrainedModel, Processor, RawImage, env } from '@huggingface/transformers';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 export function RemoveBackground() {
     const [isLoadingModel, setIsLoadingModel] = useState(true);
@@ -14,18 +15,25 @@ export function RemoveBackground() {
             try {
                 const model_id = "briaai/RMBG-1.4";
 
+                // 判断是否支持 WebGPU
+                const device = ('gpu' in navigator) ? "webgpu" : "wasm";
+
                 // 强制使用 WASM (WebAssembly) 作为设备
                 if (env?.backends?.onnx?.wasm) {
                     env.backends.onnx.wasm.proxy = false;
                 }
-                // 加载模型和处理器，指定为 "wasm" 设备
-                modelRef.current = await AutoModel.from_pretrained(model_id, { device: "wasm" });
+
+                // 加载模型和处理器，指定设备
+                modelRef.current = await AutoModel.from_pretrained(model_id, { device });
                 processorRef.current = await AutoProcessor.from_pretrained(model_id);
 
+                // 提示模型已成功加载
+                toast.success(`模型已成功加载，使用设备: ${device}`);
                 setIsLoadingModel(false);
             } catch (err) {
                 if (err instanceof Error) {
                     setError(err);
+                    toast.error(`加载模型时出错: ${err.message}`);
                 }
                 setIsLoadingModel(false);
             }
@@ -37,7 +45,7 @@ export function RemoveBackground() {
             const model = modelRef.current;
             const processor = processorRef.current;
             if (!model || !processor) {
-                throw new Error("Model or processor not loaded");
+                throw new Error("模型或处理器未加载");
             }
 
             // 读取图像
@@ -77,9 +85,12 @@ export function RemoveBackground() {
                 }
                 ctx.putImageData(pixelData, 0, 0);
             }
+
+            toast.success("图像处理成功");
             return canvas.toDataURL("image/png");
         } catch (error) {
-            console.error("Error processing image:", error);
+            console.error("处理图像时出错:", error);
+            toast.error("图像处理失败");
             return null;
         }
     }, []);
